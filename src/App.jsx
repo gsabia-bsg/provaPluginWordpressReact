@@ -250,17 +250,10 @@ function Stat({ to, suffix = "", label }) {
 function Hero() {
   return (
     <section className="hero" id="top">
-      <div className="hero-bg">
-        <div className="hero-circle c1" />
-        <div className="hero-circle c2" />
-        <div className="hero-circle c3" />
-        <div className="hero-grain" />
-      </div>
-
       <div className="hero-content">
         <span className="hero-tag">
           <span className="pulse-dot" />
-          Studio creativo · disponibili Q3 2026
+          Disponibili per nuovi progetti
         </span>
 
         <h1 className="hero-title">
@@ -269,8 +262,7 @@ function Hero() {
         </h1>
 
         <p className="hero-sub">
-          Design, strategia e sviluppo digitale per brand che vogliono lasciare il segno —
-          non solo essere visti.
+          Design, strategia e sviluppo digitale per brand che vogliono lasciare il segno.
         </p>
 
         <div className="hero-actions">
@@ -283,33 +275,9 @@ function Hero() {
         </div>
 
         <div className="hero-stats">
-          <Stat to={200} suffix="+" label="Clienti soddisfatti" />
-          <span className="stat-sep" />
-          <Stat to={450} suffix="+" label="Progetti consegnati" />
-          <span className="stat-sep" />
-          <Stat to={8} label="Anni di esperienza" />
-        </div>
-      </div>
-
-      <div className="hero-visual">
-        <div className="hv-card hv-main">
-          <div className="hv-aspect">
-            <div className="hv-frame" />
-            <div className="hv-glyph">A</div>
-            <div className="hv-noise" />
-          </div>
-          <div className="hv-meta">
-            <span>NX-024 / Living brand system</span>
-            <span>2026</span>
-          </div>
-        </div>
-        <div className="hv-card hv-small hv1">
-          <span className="hv-tiny">Awwwards</span>
-          <span className="hv-big">SOTD</span>
-        </div>
-        <div className="hv-card hv-small hv2">
-          <span className="hv-tiny">CSS Design</span>
-          <span className="hv-big">★ 4.96</span>
+          <Stat to={200} suffix="+" label="Clienti" />
+          <Stat to={450} suffix="+" label="Progetti" />
+          <Stat to={8} label="Anni" />
         </div>
       </div>
     </section>
