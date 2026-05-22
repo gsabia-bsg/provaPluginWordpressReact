@@ -216,9 +216,9 @@ html, body {
 }
 .hero-title {
   font-size: clamp(2.25rem, 5.5vw, 4rem);
-  font-weight: 600; line-height: 1.1;
+  font-weight: 700; line-height: 1.05;
   color: var(--text); margin-bottom: 1.25rem;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 .hero-title em {
   color: var(--muted);
@@ -242,11 +242,13 @@ html, body {
   font-size: 0.9rem; font-weight: 500;
   border: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: 0.4rem;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s;
   font-family: inherit;
 }
-.btn-primary svg { width: 14px; height: 14px; }
-.btn-primary:hover { opacity: 0.85; }
+.btn-primary svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:hover svg { transform: translateX(2px); }
+.btn-primary:active { transform: translateY(0); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-ghost {
   color: var(--text);
@@ -517,7 +519,8 @@ html, body {
 }
 .work-card:hover {
   border-color: var(--text);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 .wc-visual {
   aspect-ratio: 4 / 3;
@@ -738,7 +741,7 @@ html, body {
 .faq-q {
   width: 100%; background: transparent; border: none;
   text-align: left; cursor: pointer;
-  padding: 1.25rem 0;
+  padding: 1.35rem 0;
   display: flex; align-items: center; justify-content: space-between;
   gap: 1rem;
   font-size: 0.95rem; font-weight: 500;
@@ -747,6 +750,7 @@ html, body {
   font-family: inherit;
 }
 .faq-q:hover { color: var(--muted); }
+.faq-item.open .faq-q { color: var(--text); }
 .faq-icon {
   flex-shrink: 0;
   width: 24px; height: 24px;
