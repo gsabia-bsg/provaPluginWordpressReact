@@ -1,0 +1,79 @@
+name: Deploy to WordPress
+
+# Si attiva su ogni push sul branch main
+on:
+  push:
+    branches:
+      - main
+
+  # Permette anche di triggerare manualmente dalla UI di GitHub
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout del codice
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js (usa la versione del tuo progetto)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Installa le dipendenze
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build della React app con Vite
+      - name: Build
+        run: npm run build
+
+      # 5. Crea lo zip della dist/
+      - name: Create zip
+        run: |
+          cd dist
+          zip -r ../app-deploy.zip .
+          cd ..
+          echo "Zip creato: $(du -sh app-deploy.zip | cut -f1)"
+
+      # 6. Deploy via endpoint REST del plugin WP App Loader
+      - name: Deploy to WordPress
+        run: |
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" \
+            -X POST "${{ secrets.WP_URL }}/wp-json/wpal/v1/deploy" \
+            -H "X-WPAL-Deploy-Key: ${{ secrets.WP_DEPLOY_KEY }}" \
+            -F "app_name=${{ secrets.WP_APP_NAME }}" \
+            -F "zip_file=@app-deploy.zip")
+
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response: $(cat response.json)"
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Deploy fallito con status $HTTP_STATUS"
+            exit 1
+          fi
+
+          SUCCESS=$(cat response.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('success', False))")
+          if [ "$SUCCESS" != "True" ]; then
+            echo "Deploy fallito: $(cat response.json)"
+            exit 1
+          fi
+
+          APP_URL=$(cat response.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('url', ''))")
+          echo "Deploy completato! App disponibile su: $APP_URL"
+
+      # 7. Notifica (opzionale, puoi rimuovere questa sezione se non usi Slack)
+      # - name: Notify Slack
+      #   if: always()
+      #   uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: ${{ job.status }}
+      #     text: "Deploy ${{ job.status }} — ${{ secrets.WP_URL }}/app/${{ secrets.WP_APP_NAME }}/"
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
